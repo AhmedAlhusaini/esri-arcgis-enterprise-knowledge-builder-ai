@@ -22,9 +22,9 @@
         }
 
         body {
-            background: linear-gradient(-45deg, #1A1A2E, #4e0250, #ff8c00, #ff2e63);
+            background: linear-gradient(-45deg, #141E30, #243B55, #4B1248, #FF4B2B);
             background-size: 400% 400%;
-            animation: gradientBG 25s ease infinite;
+            animation: gradientBG 10s ease infinite;
             color: var(--text-light);
             min-height: 100vh;
             display: flex;
@@ -173,6 +173,21 @@
             box-shadow: 0 5px 15px rgba(0, 121, 193, 0.4);
         }
 
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-image {
+                max-height: 250px;
+            }
+        }
     </style>
 </head>
 <body>
