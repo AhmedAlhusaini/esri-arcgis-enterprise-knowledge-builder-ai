@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcGIS Enterprise Knowledge Builder</title>
+    <title>ArcGIS Enterprise & Pro Knowledge Builder</title>
     <style>
         :root {
             --primary: #0079c1; /* ESRI Blue-ish */
@@ -14,93 +14,79 @@
             --text-light: #f0f0f0;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
             background: linear-gradient(-45deg, #141E30, #243B55, #4B1248, #FF4B2B);
             background-size: 400% 400%;
             animation: gradientBG 10s ease infinite;
             color: var(--text-light);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            overflow: hidden;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .container {
             max-width: 900px;
-            width: 100%;
+            width: 95%;
             background: var(--glass);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
+            border-radius: 20px;
+            padding: 25px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             text-align: center;
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInUp 1s ease-out forwards;
+            animation: fadeInUp 0.8s ease-out forwards;
+            max-height: 95vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* Icons */
+        .icons-container { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .product-icon { text-align: center; }
+        .product-icon img { width: 60px; height: 60px; border-radius: 50%; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
+        .product-icon p { font-size: 0.8rem; color: #ccc; margin-top: 5px; }
+
+        /* Specific Icon Styles */
+        .icon-enterprise { background: white; padding: 5px; object-fit: contain; }
+        .icon-pro { object-fit: cover; }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            margin-bottom: 5px;
             background: linear-gradient(to right, #fff, #00d2ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
+            line-height: 1.2;
         }
 
-        .header p {
-            font-size: 1.2rem;
-            color: #ccc;
-            margin-bottom: 30px;
-        }
-
-        .hero-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 16px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            border: 1px solid var(--glass-border);
-            transition: transform 0.3s ease;
-        }
-
-        .hero-image:hover {
-            transform: scale(1.02);
-        }
+        .header p { font-size: 1rem; color: #ccc; margin-bottom: 10px; line-height: 1.4; }
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 10px;
             text-align: left;
         }
 
         .feature-card {
             background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             border: 1px solid transparent;
             transition: all 0.3s ease;
         }
@@ -108,95 +94,106 @@
         .feature-card:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--accent);
-            transform: translateY(-5px);
+            transform: translateY(-3px);
         }
 
-        .feature-card h3 {
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
+        .feature-card h3 { color: var(--accent); margin-bottom: 5px; font-size: 1.1rem; }
+        .feature-card p { font-size: 0.85rem; line-height: 1.3; }
 
         .about-section {
             background: rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            border-radius: 16px;
-            margin-top: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
             border-left: 4px solid var(--secondary);
             text-align: left;
-            position: relative;
         }
+
+        .about-content { display: flex; align-items: center; gap: 20px; }
 
         .profile-img {
-            width: 120px;
-            height: 120px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            border: 4px solid var(--accent);
+            border: 3px solid var(--accent);
             object-fit: cover;
             display: block;
-            margin: 0 auto 20px auto;
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            flex-shrink: 0;
         }
 
-        .about-section h2 {
-            margin-bottom: 15px;
-            align-items: center;
-            gap: 10px;
-            text-align: center;
-        }
-
-        .about-section p {
-             text-align: center;
-        }
+        .profile-text { text-align: left; flex: 1; }
+        .profile-desc { margin-bottom: 10px; line-height: 1.4; font-size: 0.95rem; }
+        .profile-footer { font-size: 0.85rem; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .btn-container { flex-shrink: 0; }
 
         .btn {
             display: inline-block;
-            padding: 12px 30px;
-            margin-top: 20px;
+            padding: 8px 20px;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             text-decoration: none;
-            border-radius: 30px;
+            border-radius: 20px;
             font-weight: bold;
+            font-size: 0.9rem;
             transition: transform 0.3s, box-shadow 0.3s;
             border: none;
             cursor: pointer;
-            margin-left: auto;
-            margin-right: auto;
         }
 
-        .btn-container {
-             text-align: center;
-        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 121, 193, 0.4); }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 121, 193, 0.4);
-        }
-
-
+        /* Media Queries for all screens */
         @media (max-width: 768px) {
-            .container {
-                padding: 25px;
-                margin: 20px;
-            }
+            body { padding: 10px; height: auto; min-height: 100vh; overflow-y: auto; display: block; }
+            .container { padding: 15px; margin: 20px auto; max-height: none; overflow: visible; }
+            
+            .features { grid-template-columns: 1fr; gap: 10px; }
+            
+            .header h1 { font-size: 1.6rem; }
+            .header p { font-size: 0.95rem; }
 
-            .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero-image {
-                max-height: 250px;
-            }
+            .about-content { flex-direction: column; text-align: center; gap: 15px; }
+            .profile-text { text-align: center; }
+            .profile-desc span { display: inline; } /* Keep inline but allow wrap */
+            .profile-footer { white-space: normal; } /* Allow wrap on mobile */
+            
+            .btn-container { width: 100%; text-align: center; }
+            .btn { width: 100%; max-width: 250px; }
+            
+            .icons-container { gap: 15px; }
+            .product-icon img { width: 50px; height: 50px; }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 400px) {
+            .header h1 { font-size: 1.4rem; }
+            .container { padding: 10px; }
+            .profile-img { width: 70px; height: 70px; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- Icons Section -->
+        <div class="icons-container">
+            <div class="product-icon">
+                <img src="https://enterprise.arcgis.com/assets/images/enterprise-logo.png" alt="ArcGIS Enterprise" class="icon-enterprise">
+                <p></p> 
+                <!-- ArcGIS Enterprise -->
+            </div>
+            <div class="product-icon">
+                <img src="https://tse2.mm.bing.net/th/id/OIP.RTY-A8Jtg9oEc1Hu_lu2BgHaHg?rs=1&pid=ImgDetMain&o=7&rm=3" alt="ArcGIS Pro" class="icon-pro">
+                <p></p> 
+                <!-- ArcGIS Pro -->
+            </div>
+        </div>
+
         <!-- Hero Section -->
         <header class="header">
-            <h1>ArcGIS Enterprise Knowledge Builder</h1>
-            <p>Turn scattered documentation into a unified, AI-ready Knowledge Base<br> "Local LLM , Custom GPT & NotebookLM".</p>
+            <h1>Offline AI ArcGIS Knowledge Builder</h1>
+            <p>Empower your private AI with a complete, offline-ready ArcGIS documentation knowledge base.<br> "Zero Hallucinations, 100% Context".</p>
         </header>
 
         <!-- Features Grid -->
@@ -210,24 +207,28 @@
                 <p>Injects breadcrumbs and relocates headers for a perfect, book-like reading experience.</p>
             </div>
             <div class="feature-card">
-                <h3>🤖 AI Ready</h3>
-                <p>Clean, structured output designed specifically for RAG, NotebookLM, and LLM ingestion.</p>
+                <h3>🤖 AI Optimized</h3>
+                <p>Clean, structured output designed specifically for RAG, NotebookLM, and Offline LLMs.</p>
             </div>
         </div>
 
         <!-- About Me Section -->
         <div class="about-section">
-            <img src="https://avatars.githubusercontent.com/u/75701876?v=4" alt="Ahmed Tarek Alhusainy" class="profile-img">
-            <!-- <h2>👤 About Me</h2> -->
-            <p>
-                Hi, I'm <strong>Ahmed Tarek Alhusainy</strong>. <br>
-				As a Senior Solutions Engineer / GIS-DevOps Engineer, I live by the rule of unwavering resilience and adaptability, shaping next-generation infrastructure and smart GIS solutions with an unyielding passion for creating positive change. My one rule is simple: "Whatever, whenever, whoever, the sun also rises, and life goes on, so we must try to live, hoping this makes me die and rest in peace.
-			</p>
-            <br>
-            <p><em>"Happy Studying, Happy Preparing For ESRI Certificates & Happy Leveraging AI into your Knowledge Base!"</em></p>
-            
-            <div class="btn-container">
-            <a href="https://github.com/AhmedAlhusaini/esri-arcgis-enterprise-knowledge-builder-ai" class="btn">View on GitHub</a>
+            <div class="about-content">
+                <img src="https://avatars.githubusercontent.com/u/75701876?v=4" alt="Ahmed Tarek Alhusainy" class="profile-img">
+                <div class="profile-text">
+                     <p class="profile-desc">
+                        Hi, I'm <strong>Ahmed Tarek Alhusainy</strong>. <br>
+                        <span style="font-size: 0.9rem; color: #ddd;">Senior Solutions Engineer / GIS-DevOps Engineer.I live by the rule of unwavering resilience and adaptability</span>
+                        <span style="font-size: 0.9rem; color: #ddd;">My one simple rule is : Whatever, whenever, whoever, the sun also rises, and life goes on, so we must try to live, hoping this makes me die and rest in peace.</span>
+                    </p>
+                    <p class="profile-footer">
+                        <em>Happy Preparing For ESRI Certificates & Happy Leveraging AI!"</em>
+                    </p>
+                </div>
+                <div class="btn-container">
+                    <a href="https://github.com/AhmedAlhusaini/esri-arcgis-enterprise-knowledge-builder-ai" class="btn">View on GitHub</a>
+                </div>
             </div>
         </div>
     </div>
