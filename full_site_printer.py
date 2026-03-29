@@ -20,13 +20,22 @@ CSS_INJECT = """
 /* Reveal all accordion content */
 nav.accordion-content { display: block !important; height: auto !important; max-height: none !important; visibility: visible !important; opacity: 1 !important; }
 aside.js-accordion .accordion-section { display: block !important; }
+
+/* Reveal Calcite components & Shadow DOM equivalents (Cookbook/Enterprise) */
+calcite-tree, calcite-tree-item, [calcite-hydrated-hidden] { visibility: visible !important; display: block !important; opacity: 1 !important; height: auto !important; max-height: none !important; pointer-events: auto !important; }
+calcite-accordion, calcite-accordion-item, calcite-panel, calcite-block { visibility: visible !important; display: block !important; opacity: 1 !important; height: auto !important; max-height: none !important; }
+.calcite-tree-children, [slot="children"], [slot="content"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
+
 /* Hide unwanted elements */
 #onetrust-banner-sdk, #onetrust-consent-sdk { display: none !important; }
 /* Hide ALL headers (we inject specific content manually) */
 header, footer, .site-header, .esri-footer, .global-footer { display: none !important; }
 h1 { display: block !important; visibility: visible !important; opacity: 1 !important; color: black !important; }
-aside.js-accordion, .column-5, .share-buttons, .feedback-container { display: none !important; }
+
+/* Hide sidebars from PDF print out */
+aside.js-accordion, .column-5, .share-buttons, .feedback-container, .shell-panel, calcite-shell-panel { display: none !important; }
 .column-17 { width: 100% !important; margin: 0 !important; }
+
 /* Style for injected breadcrumbs */
 .injected-breadcrumb { font-size: 10pt; color: #666; margin-bottom: 10px; }
 .injected-breadcrumb a { color: #666; text-decoration: none; }
@@ -96,33 +105,49 @@ def run():
                     // SKIP Headers
                     if (child.classList.contains('accordion-title') || ['H3','H4'].includes(child.tagName)) continue;
 
-                    // CASE 1: GROUP (Accordion/Header Container)
+                    // CASE 1: GROUP (Accordion/Header Container or Calcite Group)
                     let headerEl = child.querySelector('.accordion-title') || child.querySelector('h3') || child.querySelector('h4');
-                    let isGroup = child.classList.contains('accordion-section') || headerEl;
+                    let isCalciteGroup = child.tagName === 'CALCITE-TREE-ITEM' && child.hasAttribute('has-children');
+                    let isGroup = child.classList.contains('accordion-section') || headerEl || isCalciteGroup;
                     
                     if (isGroup) {
-                        let titleEl = headerEl || child;
-                        let groupTitle = titleEl.innerText.trim();
-                        let contentEl = child.querySelector('.accordion-content');
+                        let groupTitle = "";
+                        if (isCalciteGroup) {
+                            // Extract direct text for Calcite Tree group
+                            let textContent = "";
+                            for (let node of child.childNodes) {
+                                if (node.nodeType === Node.TEXT_NODE) textContent += node.textContent;
+                            }
+                            groupTitle = textContent.trim();
+                            if (!groupTitle) {
+                                let link = child.querySelector(':scope > a');
+                                if (link) groupTitle = link.innerText.trim() || link.textContent.trim();
+                            }
+                        } else {
+                            let titleEl = headerEl || child;
+                            groupTitle = titleEl.innerText.trim() || titleEl.textContent.trim();
+                        }
+                        
+                        let contentEl = child.querySelector('.accordion-content') || child.querySelector('calcite-tree');
                         let container = contentEl ? contentEl : child;
                         
                         let subItems = parseNode(container, level + 1);
                         subItems = subItems.filter(i => i.title !== groupTitle);
                         
-                        if (subItems.length > 0 || child.classList.contains('accordion-section')) {
+                        if (subItems.length > 0 || child.classList.contains('accordion-section') || isCalciteGroup) {
                              items.push({ type: 'group', title: groupTitle, children: subItems });
                              continue;
                         }
                     }
                     
-                    // CASE 2: LI WRAPPER
-                    if (child.tagName === 'LI') {
+                    // CASE 2: LI WRAPPER OR CALCITE LEAF
+                    if (child.tagName === 'LI' || (child.tagName === 'CALCITE-TREE-ITEM' && !child.hasAttribute('has-children'))) {
                         let link = child.querySelector(':scope > a');
                         if (!link) {
                             items = items.concat(parseNode(child, level)); 
                             continue;
                         }
-                        let title = link.innerText.trim();
+                        let title = link.innerText.trim() || link.textContent.trim();
                         let url = link.href;
                         let subContainer = Array.from(child.children).filter(c => c !== link);
                         let subItems = [];
@@ -139,7 +164,7 @@ def run():
                     }
 
                     // CASE 3: FLATTEN WRAPPERS
-                    if (['NAV','DIV','UL'].includes(child.tagName)) {
+                    if (['NAV','DIV','UL','CALCITE-TREE'].includes(child.tagName)) {
                         items = items.concat(parseNode(child, level));
                         continue;
                     }
@@ -153,7 +178,7 @@ def run():
                 return items;
             }
             
-            let root = document.querySelector('aside.js-accordion');
+            let root = document.querySelector('aside.js-accordion') || document.querySelector('.shell-panel .toc calcite-tree') || document.querySelector('calcite-tree');
             if (!root) return [];
             return parseNode(root, 0);
         }""")
