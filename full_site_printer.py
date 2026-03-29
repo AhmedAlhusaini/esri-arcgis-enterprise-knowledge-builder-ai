@@ -11,9 +11,9 @@ from pypdf import PdfWriter
 sys.stdout.reconfigure(encoding='utf-8')
 
 # Config
-START_URL = "https://pro.arcgis.com/en/pro-app/latest/help/main/welcome-to-the-arcgis-pro-app-help.htm"
-OUTPUT_DIR = "04Pro/Help"
-MERGED_FILENAME = "ArcGIS For Pro Help.pdf"
+START_URL = "https://esri.github.io/arcgis-cookbook/"
+OUTPUT_DIR = "Outputs/06ArcGIS Enterprise In The Cloud/ArcGIS Cookbook"
+MERGED_FILENAME = "Outputs/06ArcGIS Enterprise In The Cloud/ArcGIS Cookbook.pdf"
 
 # Aggressive CSS to reveal everything and clean print
 CSS_INJECT = """
